@@ -5,6 +5,7 @@ HOST = "127.0.0.1"
 PORT_TCP = 12345
 PORT_UDP = 12346
 
+#Cliente para TCP
 def cliente_tcp():
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.connect((HOST,PORT_TCP))
@@ -32,6 +33,7 @@ def cliente_tcp():
         except:
             break
 
+#Cliente para UDP
 def cliente_udp():
     servidor_addr = (HOST,PORT_UDP)
     sock = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
@@ -46,7 +48,7 @@ def cliente_udp():
                 break
     threading.Thread(target=escuchar, daemon=True).start()
     print("===Chat UDP===")
-    nombre = input("Ingresa tu nombre de usuario nombre de usuario: ")
+    nombre = input("Ingresa tu nombre de usuario: ")
     try:
         while True:
             msg = input()

@@ -10,16 +10,19 @@ HOST = "127.0.0.1"
 PORT_TCP = 12345
 PORT_UDP = 12346
 
+#Funcion para obtener la hora y fecha
 def obtener_tiempo():
     return datetime.now().strftime("[%H:%M:%S | %d-%m-%Y]")
 
+#Obtener los usuarios registrados
 def cargar_usuarios():
     try:
         with open("usuarios.txt","r") as f:
             return dict(line.strip().split(":")for line in f)
     except FileNotFoundError:
         return {}
-    
+
+#Registra usuarios para TCP    
 def registrar_usuario(username, password):
     with open("usuarios.txt","a") as f:
         f.write(f"{username}:{password}\n")
@@ -65,6 +68,7 @@ def manejar_clientes_tcp(cliente,direccion):
             if not msg:
                 break
             
+            #Mensaje privado TCP
             if msg.startswith("@"):
                 try:
                     objetivo, texto_privado = msg[1:].split(":", 1)
@@ -96,6 +100,7 @@ def manejar_clientes_tcp(cliente,direccion):
             del usuarios_en_linea[usuario]
             trasmitir_tcp(f"[{usuario} se ha desconectado]",None)
 
+#Transmitir a traves de TCP
 def trasmitir_tcp(mensaje,remitente):
     for sock in usuarios_en_linea.values():
         if sock != remitente:
@@ -104,6 +109,7 @@ def trasmitir_tcp(mensaje,remitente):
             except:
                 pass
 
+#Manejar socket UDP
 def manejar_udp(udp_socket):
     print("Servidor UDP esperando en el puerto 12346")
     while True:
@@ -127,6 +133,7 @@ def manejar_udp(udp_socket):
                 UDP_direcciones[nombre] = addr
                 UDP_clientes.add(addr)
 
+            #Mensaje privado para UDP
             if contenido.startswith("@"):
                 try:
                     objetivo, texto_privado = contenido[1:].split(":", 1)
